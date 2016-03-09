@@ -1,0 +1,25 @@
+def split_show_views(line):
+    line = line.strip()
+    show, views = line.split(",", 1)
+    return(show, int(views))
+
+def split_show_channel(line):
+    line = line.strip()
+    show, channel = line.split(",", 1)
+    return(show, channel)
+    
+show_views=show_views_file.map(split_show_views)
+show_channel= show_channel_file.map(split_show_channel)
+
+joined_dataset=show_views.join(show_channel)
+
+def extract_channel_views(line):
+    show=line[0]
+    views=line[1][0]
+    channel=line[1][1]
+    return (channel, views)
+
+def sum_views(a,b):
+    return a+b
+
+bb=joined_dataset.map(extract_channel_views).reduceByKey(sum_views)
